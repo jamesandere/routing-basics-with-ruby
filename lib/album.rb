@@ -5,9 +5,9 @@ class Album
 
     @@total_rows = 0
 
-    def initialize(name, id)
-        @name = name
-        @id = id || @@total_rows += 1
+    def initialize(attributes)
+        @name = attributes.fetch(:name)
+        @id = attributes.fetch(:id) || @@total_rows += 1
     end
 
     def self.all
@@ -15,7 +15,7 @@ class Album
     end
 
     def save
-        @@albums[self.id] = Album.new(self.name, self.id)
+        @@albums[self.id] = Album.new({:name => self.name, :id => self.id})
     end
 
     def ==(other_album)
@@ -37,5 +37,9 @@ class Album
 
     def delete
         @@albums.delete(self.id)
+    end
+
+    def songs
+        Song.find_by_album(self.id)
     end
 end
